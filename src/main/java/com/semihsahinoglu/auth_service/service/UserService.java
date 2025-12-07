@@ -48,4 +48,8 @@ public class UserService {
     public User findUserByUsername(String username){
         return userRepository.findByUsername(username).orElseThrow(()-> new UserNotFoundException("Kullanıcı bulunamadı !"));
     }
+
+    public Set<String> getUserRoles(User user){
+        return user.getAuthorities().stream().map(Role::getName).collect(Collectors.toSet());
+    }
 }

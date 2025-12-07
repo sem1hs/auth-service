@@ -1,8 +1,6 @@
 package com.semihsahinoglu.auth_service.service;
 
 import com.semihsahinoglu.auth_service.entity.JwtProperties;
-import com.semihsahinoglu.auth_service.entity.RefreshToken;
-import com.semihsahinoglu.auth_service.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -15,6 +13,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class JwtService {
@@ -25,7 +24,7 @@ public class JwtService {
         this.jwtProperties = jwtProperties;
     }
 
-    public String generateAccessToken(String username) {
+    public String generateAccessToken(String username, Set<String> roles) {
         Map<String, Object> claims = new HashMap<>();
         int expiration = jwtProperties.getAccessTokenExpiration();
         return createToken(claims, username, expiration);
@@ -36,12 +35,6 @@ public class JwtService {
         Date expirationDate = extractExpiration(token);
         return userDetails.getUsername().equals(username) && !expirationDate.before(new Date());
     }
-
-    public boolean validateToken(String token) {
-        Date expirationDate = extractExpiration(token);
-        return !expirationDate.before(new Date());
-    }
-
 
     public String extractUsername(String token) {
         Claims claims = Jwts.parser()

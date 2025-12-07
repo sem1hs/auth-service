@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class AuthService {
 
@@ -36,7 +38,8 @@ public class AuthService {
 
             if (authentication.isAuthenticated()) {
                 User user = userService.findUserByUsername(loginRequest.username());
-                accessToken = jwtService.generateAccessToken(loginRequest.username());
+                Set<String> roles = userService.getUserRoles(user);
+                accessToken = jwtService.generateAccessToken(loginRequest.username(), roles);
                 refreshToken = refreshTokenService.generateRefreshToken(user);
             }
         } catch (AuthenticationException e) {
@@ -48,8 +51,8 @@ public class AuthService {
 
     public JwtTokenResponse signUpAndGenerateToken(CreateUserRequest createUserRequest) {
         User user = userService.createUser(createUserRequest);
-
-        String accessToken = jwtService.generateAccessToken(user.getUsername());
+        Set<String> roles = userService.getUserRoles(user);
+        String accessToken = jwtService.generateAccessToken(user.getUsername(), roles);
         RefreshToken refreshToken = refreshTokenService.generateRefreshToken(user);
 
         return buildTokenResponse(accessToken, refreshToken.getToken());
@@ -64,7 +67,8 @@ public class AuthService {
         RefreshToken refreshToken = refreshTokenService.getRefreshToken(refreshTokenString);
         User user = refreshToken.getUser();
 
-        String newAccessToken = jwtService.generateAccessToken(user.getUsername());
+        Set<String> roles = userService.getUserRoles(user);
+        String newAccessToken = jwtService.generateAccessToken(user.getUsername(), roles);
         RefreshToken newRefresh = refreshTokenService.generateRefreshToken(user);
 
         return buildTokenResponse(newAccessToken, newRefresh.getToken());
