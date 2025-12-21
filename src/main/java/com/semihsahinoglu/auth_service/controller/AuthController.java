@@ -20,8 +20,8 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public String me(@AuthenticationPrincipal CustomUserDetails user) {
-        return "Hoş geldin " + user.getUsername();
+    public UserResponse me(@AuthenticationPrincipal CustomUserDetails user) {
+        return authService.getUser(user);
     }
 
     @PostMapping("/login")

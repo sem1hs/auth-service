@@ -3,9 +3,11 @@ package com.semihsahinoglu.auth_service.service;
 import com.semihsahinoglu.auth_service.dto.CreateUserRequest;
 import com.semihsahinoglu.auth_service.dto.JwtTokenResponse;
 import com.semihsahinoglu.auth_service.dto.LoginRequest;
+import com.semihsahinoglu.auth_service.dto.UserResponse;
 import com.semihsahinoglu.auth_service.entity.RefreshToken;
 import com.semihsahinoglu.auth_service.entity.User;
 import com.semihsahinoglu.auth_service.exception.AuthenticationFailException;
+import com.semihsahinoglu.auth_service.security.CustomUserDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -79,5 +81,9 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    public UserResponse getUser(CustomUserDetails user) {
+        return new UserResponse(user.getUsername(),user.getUser().getAuthorities());
     }
 }
