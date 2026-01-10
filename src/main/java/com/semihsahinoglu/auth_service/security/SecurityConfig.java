@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(entryPoint))
                 .exceptionHandling(exception -> exception.accessDeniedHandler(deniedHandler))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/**").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/internal/auth/**").permitAll())
                 .authorizeHttpRequests(auth-> auth.requestMatchers("/actuator/**").permitAll())
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

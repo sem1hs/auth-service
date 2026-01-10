@@ -47,6 +47,14 @@ public class JwtService {
         return claims.getSubject();
     }
 
+    public String generateServiceToken(String serviceName) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("scope", "INTERNAL");
+
+        int expiration = jwtProperties.getServiceTokenExpiration();
+        return createToken(claims, serviceName, expiration);
+    }
+
     private Date extractExpiration(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith((SecretKey) getSignKey())
